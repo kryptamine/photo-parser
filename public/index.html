@@ -29,11 +29,12 @@
 <script src="jquery.justified.js"></script>
 <script type="text/javascript">
     $(document).keypress(function (event) {
-        event.preventDefault();
 
         var keycode = (event.keyCode ? event.keyCode : event.which);
 
         if (keycode == '13') {
+            event.preventDefault();
+
             $.ajax({
                 url: 'http://api.collagist.name/user',
                 method: 'get',
