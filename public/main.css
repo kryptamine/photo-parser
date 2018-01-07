@@ -556,14 +556,16 @@ button {
   position: fixed;
   top: 50%;
   left: 50%;
-  -webkit-transform: translate(-50%, -300%);
-  transform: translate(-50%, -300%);
   display: block;
   width: 70vw;
-  opacity: 0;
-  pointer-events: none;
-  -webkit-transition: all 0.5s cubic-bezier(0.4, 0.25, 0.8, 0.3);
-  transition: all 0.5s cubic-bezier(0.4, 0.25, 0.8, 0.3);
+
+  opacity: 1;
+  -webkit-transform: translate(-50%, -100%);
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+  -webkit-transition: all 0.4s cubic-bezier(0.1, 0.45, 0.1, 0.85) 0.5s;
+  transition: all 0.4s cubic-bezier(0.1, 0.45, 0.1, 0.85) 0.5s;
+  z-index: 10;
 }
 
 input {
@@ -632,10 +634,6 @@ input:focus ~ .tip {
   opacity: 1;
 }
 
-input:focus ~ .signup-button,
-button:focus ~ .signup-button {
-  opacity: 0;
-}
 
 input:focus + label .label-text {
   opacity: 1;
@@ -643,11 +641,6 @@ input:focus + label .label-text {
   transform: translate(-50%, -100%);
   -webkit-transition: all 0.3s cubic-bezier(0.1, 0.45, 0.1, 0.85) 0.4s;
   transition: all 0.3s cubic-bezier(0.1, 0.45, 0.1, 0.85) 0.4s;
-}
-
-input:focus + label .nav-dot:before {
-  background: #a41212;
-  box-shadow: 0 0 0 0.15rem #111, 0 0 0.05rem 0.26rem #bb1515;
 }
 
 .tip {
@@ -709,52 +702,8 @@ input:focus + label .nav-dot:before {
   transition: all 0.4s cubic-bezier(0.4, 0.25, 0.8, 0.3) 0.05s;
 }
 
-.nav-dot {
-  cursor: pointer;
-  position: fixed;
-  padding: .625rem 1.25rem .625rem .625rem;
-  top: 52%;
-  right: 1.25rem;
-}
-.nav-dot:before {
-  content: '';
-  display: inline-block;
-  border-radius: 50%;
-  width: .375rem;
-  height: .375rem;
-  margin-right: .625rem;
-  position: fixed;
-  background-color: #16272f;
-  border: 0;
-  -webkit-transition: all 0.25s;
-  transition: all 0.25s;
-}
-.nav-dot:hover:before {
-  width: .625rem;
-  height: .625rem;
-  margin-top: -.125rem;
-  margin-left: -.125rem;
-  background-color: #a41212;
-}
-
 label[for="input-1"] .nav-dot {
   margin-top: -125px;
-}
-
-label[for="input-2"] .nav-dot {
-  margin-top: -100px;
-}
-
-label[for="input-3"] .nav-dot {
-  margin-top: -75px;
-}
-
-label[for="input-4"] .nav-dot {
-  margin-top: -50px;
-}
-
-label[for="input-5"] .nav-dot {
-  margin-top: -25px;
 }
 
 * {

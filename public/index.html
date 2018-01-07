@@ -9,90 +9,89 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-    <section class="body demo">
-        <div class="block-header">
-            <span id="#avatars" class="avatars"></span>
-            <h3>Collagist</h3>
-        </div>
-        <div class="demo-container clearfix">
-            <div class="image-container"></div>
-            <form>
-                <input id="input-1" type="text" placeholder="Идентификаторы VK через запятую" required autofocus />
-                <label for="input-1">
-                    <span class="label-text">Идентификаторы VK</span>
-                    <span class="nav-dot"></span>
-                    <div class="signup-button-trigger">Sign Up</div>
-                </label>
-                <p class="tip">Нажмите Tab</p>
-                <div id="send" class="signup-button">Собрать коллаж</div>
-            </form>
-        </div>
-    </section>
-    <script src="jquery.justified.js"></script>
-    <script type="text/javascript">
+<section class="body demo">
+    <div class="block-header">
+        <span id="#avatars" class="avatars"></span>
+        <h3>Collagist</h3>
+    </div>
+    <div class="demo-container clearfix">
+        <div class="image-container"></div>
+        <form id="form">
+            <input id="input-1" type="text" placeholder="Идентификаторы VK через запятую" required autofocus/>
+            <label for="input-1">
+                <span class="label-text">Идентификаторы VK</span>
+                <span class="nav-dot"></span>
+            </label>
+            <p class="tip">Нажмите enter</p>
+        </form>
+    </div>
+</section>
+<script src="jquery.justified.js"></script>
+<script type="text/javascript">
+    $(document).keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
 
-        $(function() {
-            $(".signup-button-trigger").click(function() {
-
-                $.ajax({
-                    url : 'http://localhost:8000/user',
-                    method: 'get',
-                    dataType: 'json',
-                    data: {
-                        id: $("#input-1").val().split(",")
-                    },
-                    success : function(data){
-                        var ids = [];
-
-                        $.each(data, function(k, value) {
-                            $('<img />', {
-                                src: value.photo_50
-                            }).appendTo($('.block-header .avatars'))
-
-                            ids.push(value.id)
-                        });
-
-                        $.ajax({
-                            url : 'http://localhost:8000/photos',
-                            method: 'get',
-                            dataType: 'json',
-                            data: {
-                                id: ids
-                            },
-                            success : function(data){
-                                showPhotos(data);
-                            },
-                            error : function (data) {
-                                alert(data.responseText)
-                            }
-                        })
-
-                    },
-                    error : function (data) {
-                        alert(data.responseText)
-                    }
-                })
-            });
-        });
-
-        var showPhotos = function(photos){
-
-            $('form').remove();
-
-            return $('.image-container').justifiedImages({
-                images : photos,
-                rowHeight: 250,
-                maxRowHeight: 400,
-                thumbnailPath: function(photo, width, height){
-                    return photo.url;
+        if (keycode == '13') {
+            $.ajax({
+                url: 'http://api.collagist.name/user',
+                method: 'get',
+                dataType: 'json',
+                data: {
+                    id: $("#input-1").val().split(",")
                 },
-                getSize: function(photo){
+                success: function (data) {
+                    var ids = [];
 
-                    return {width: photo.width, height: photo.height };
+                    $.each(data, function (k, value) {
+                        $('<img />', {
+                            src: value.photo_50
+                        }).appendTo($('.block-header .avatars'))
+
+                        ids.push(value.id)
+                    });
+
+                    $.ajax({
+                        url: 'http://api.collagist.name/photos',
+                        method: 'get',
+                        dataType: 'json',
+                        data: {
+                            id: ids
+                        },
+                        success: function (data) {
+                            showPhotos(data);
+                        },
+                        error: function (data) {
+                            alert(data.responseText)
+                        }
+                    })
+
                 },
-                margin: 2
-            });
+                error: function (data) {
+                    alert(data.responseText)
+                }
+            })
+
         }
-    </script>
+    });
+
+    var showPhotos = function (photos) {
+
+        $('form').remove();
+
+        return $('.image-container').justifiedImages({
+            images: photos,
+            rowHeight: 250,
+            maxRowHeight: 400,
+            thumbnailPath: function (photo, width, height) {
+                return photo.url;
+            },
+            getSize: function (photo) {
+
+                return {width: photo.width, height: photo.height};
+            },
+            margin: 2
+        });
+    }
+</script>
 </body>
 </html>
