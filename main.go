@@ -177,12 +177,20 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(result, &users)
 
 	if err != nil {
+		VkConnect()
+
 		http.Error(w, err.Error(), 500)
 
 		return
 	}
 
 	json.NewEncoder(w).Encode(users)
+}
+
+func VkConnect() {
+	if err := vk.connect(os.Getenv("VK_LOGIN"), os.Getenv("VK_PASSWORD"), os.Getenv("VK_CLIENT_ID"), os.Getenv("VK_SCOPE")); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
@@ -194,9 +202,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	if err := vk.connect(os.Getenv("VK_LOGIN"), os.Getenv("VK_PASSWORD"), os.Getenv("VK_CLIENT_ID"), os.Getenv("VK_SCOPE")); err != nil {
-		log.Fatal(err)
-	}
+	VkConnect()
 
 	router.HandleFunc("/photos", GetPhotos).Methods("GET")
 	router.HandleFunc("/user", GetUser).Methods("GET")
