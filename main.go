@@ -113,7 +113,7 @@ func (vk *VkConnector) parse(id string) PhotoResponse {
 		"owner_id": id,
 	}
 
-	result, _ := vk.Vk.Request("photos.getAll", params)
+	result := VkRequest("photos.getAll", params)
 
 	json.Unmarshal(result, &photoResponse)
 
@@ -156,6 +156,16 @@ func GetPhotos(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(shuffle(result))
 }
 
+func VkRequest(method string, params map[string]string) []byte {
+	result, err := vk.Vk.Request(method, params)
+
+	if err != nil {
+		VkConnect()
+	}
+
+	return result
+}
+
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	ids := r.URL.Query()["id[]"]
 
@@ -172,13 +182,11 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	var users []User
 
-	result, err := vk.Vk.Request("users.get", params)
+	result := VkRequest("users.get", params)
 
-	err = json.Unmarshal(result, &users)
+	err := json.Unmarshal(result, &users)
 
 	if err != nil {
-		VkConnect()
-
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -201,8 +209,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
-	VkConnect()
 
 	router.HandleFunc("/photos", GetPhotos).Methods("GET")
 	router.HandleFunc("/user", GetUser).Methods("GET")
